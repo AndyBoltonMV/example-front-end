@@ -1,25 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import { Routes, Route } from "react-router-dom";
+import styled from "styled-components";
+import { Navbar } from "./components/navbar";
+import { Landing } from "./pages/landing";
+import { Feed } from "./pages/feed";
+import { Profile } from "./pages/profile";
 
-function App() {
+const AppContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  background-color: ${(props) => (props.isLight ? "#fff" : "#222")};
+`;
+
+const App = () => {
+  const [isLight, setIsLight] = useState(true);
+  const [user, setUser] = useState();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AppContainer isLight={isLight}>
+      {user && (
+        <Navbar
+          user={user}
+          setUser={setUser}
+          isLight={isLight}
+          setIsLight={setIsLight}
+        />
+      )}
+      <Routes>
+        <Route path="/" element={<Landing user={user} setUser={setUser} />} />
+        <Route path="/feed" element={<Feed user={user} />} />
+        <Route
+          path={`/${user}`}
+          element={<Profile user={user} setUser={setUser} />}
+        />
+      </Routes>
+    </AppContainer>
   );
-}
+};
 
 export default App;
